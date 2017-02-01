@@ -31,20 +31,15 @@ describe('Reducers', () => {
     it('should add new todo', () => {
       var action = {
         type: 'ADD_TODO',
-        todo: {
-          id: 'abc123',
-          text: 'Something to do',
-          completed: false,
-          createdAt: 92384275
-        }
+        text: 'Walk the dog'
       };
       var res = reducers.todosReducer(df([]), df(action));
 
       expect(res.length).toEqual(1);
-      expect(res[0]).toEqual(action.todo);
+      expect(res[0].text).toEqual(action.text);
     });
 
-    it('should update todo', () => {
+    it('should toggle todo', () => {
       var todos = [{
         id: '123',
         text: 'Something',
@@ -52,20 +47,14 @@ describe('Reducers', () => {
         createdAt: 123,
         completedAt: 125
       }];
-      var updates = {
-        completed: false,
-        completedAt: null
-      };
       var action = {
-        type: 'UPDATE_TODO',
-        id: todos[0].id,
-        updates
+        type: 'TOGGLE_TODO',
+        id: '123'
       };
       var res = reducers.todosReducer(df(todos), df(action));
 
-      expect(res[0].completed).toEqual(updates.completed);
-      expect(res[0].completedAt).toEqual(updates.completedAt);
-      expect(res[0].text).toEqual(todos[0].text);
+      expect(res[0].completed).toEqual(false);
+      expect(res[0].completedAt).toEqual(undefined);
     });
 
     it('should add existing todos', () => {
@@ -84,32 +73,6 @@ describe('Reducers', () => {
 
       expect(res.length).toEqual(1);
       expect(res[0]).toEqual(todos[0]);
-    });
-  });
-
-  describe('authReducer', () => {
-    it('should store uid on LOGIN', () => {
-      const action = {
-        type: 'LOGIN',
-        uid: 'abc123'
-      };
-      const res = reducers.authReducer(undefined, df(action));
-
-      expect(res).toEqual({
-        uid: action.uid
-      });
-    });
-
-    it('should wipe auth on LOGOUT', () => {
-      const authData = {
-        uid: '123abc'
-      };
-      const action = {
-        type: 'LOGOUT'
-      };
-      const res = reducers.authReducer(df(authData), df(action));
-
-      expect(res).toEqual({});
     });
   });
 });
